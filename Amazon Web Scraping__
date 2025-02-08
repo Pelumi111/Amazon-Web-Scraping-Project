@@ -1,0 +1,247 @@
+{
+ "cells": [
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "id": "cd3ce1f0-78ac-49a9-a465-9e87923dfb12",
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "# import libraries \n",
+    "\n",
+    "from bs4 import BeautifulSoup\n",
+    "import requests\n",
+    "import time\n",
+    "import datetime\n",
+    "\n",
+    "import smtplib\n",
+    "\n",
+    "# Connect to Website and pull in data\n",
+    "\n",
+    "URL = 'https://www.amazon.com/Funny-Data-Systems-Business-Analyst/dp/B07FNW9FGJ/ref=sr_1_3?dchild=1&keywords=data%2Banalyst%2Btshirt&qid=1626655184&sr=8-3&customId=B0752XJYNL&th=1'\n",
+    "\n",
+    "headers = {\"User-Agent\": \"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/78.0.3904.108 Safari/537.36\", \"Accept-Encoding\":\"gzip, deflate\", \"Accept\":\"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"DNT\":\"1\",\"Connection\":\"close\", \"Upgrade-Insecure-Requests\":\"1\"}\n",
+    "\n",
+    "page = requests.get(URL, headers=headers)\n",
+    "\n",
+    "soup1 = BeautifulSoup(page.content, \"html.parser\")\n",
+    "\n",
+    "soup2 = BeautifulSoup(soup1.prettify(), \"html.parser\")\n",
+    "\n",
+    "title = soup2.find(id='productTitle').get_text()\n",
+    "\n",
+    "price = soup2.find(id='priceblock_ourprice').get_text()\n",
+    "\n",
+    "\n",
+    "print(title)\n",
+    "print(price)\n"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "id": "a70342eb-c07c-400d-9369-bb596eaf3ee1",
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "# Clean up the data a little bit\n",
+    "\n",
+    "price = price.strip()[1:]\n",
+    "title = title.strip()\n",
+    "\n",
+    "print(title)\n",
+    "print(price)"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "id": "79c56317-7e5f-455f-8963-4ab902462735",
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "# Create a Timestamp for your output to track when data was collected\n",
+    "\n",
+    "import datetime\n",
+    "\n",
+    "today = datetime.date.today()\n",
+    "\n",
+    "print(today)\n"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "id": "ee558d3e-f91b-4f38-8143-f12994d159a5",
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "# Create CSV and write headers and data into the file\n",
+    "\n",
+    "import csv \n",
+    "\n",
+    "header = ['Title', 'Price', 'Date']\n",
+    "data = [title, price, today]\n",
+    "\n",
+    "\n",
+    "with open('AmazonWebScraperDataset.csv', 'w', newline='', encoding='UTF8') as f:\n",
+    "    writer = csv.writer(f)\n",
+    "    writer.writerow(header)\n",
+    "    writer.writerow(data)"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "id": "79d9ba95-9b85-4149-bcc1-3fedda1d67a5",
+   "metadata": {},
+   "outputs": [],
+   "source": []
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "id": "eb912992-bb44-4285-a8e7-3387fde8dc0d",
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "import pandas as pd\n",
+    "\n",
+    "df = pd.read_csv(r'C:\\Users\\alexf\\AmazonWebScraperDataset.csv')\n",
+    "\n",
+    "print(df)"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "id": "cd5c8f99-a9d4-4d07-ba98-64cdb9e7d797",
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "#I am appending data to the csv\n",
+    "\n",
+    "with open('AmazonWebScraperDataset.csv', 'a+', newline='', encoding='UTF8') as f:\n",
+    "    writer = csv.writer(f)\n",
+    "    writer.writerow(data)"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "id": "c841a6c3-84eb-46d1-b4b8-65daa9c71439",
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "#Combine all of the above code into one function\n",
+    "\n",
+    "\n",
+    "def check_price():\n",
+    "    URL = 'https://www.amazon.com/Funny-Data-Systems-Business-Analyst/dp/B07FNW9FGJ/ref=sr_1_3?dchild=1&keywords=data%2Banalyst%2Btshirt&qid=1626655184&sr=8-3&customId=B0752XJYNL&th=1'\n",
+    "\n",
+    "    headers = {\"User-Agent\": \"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/78.0.3904.108 Safari/537.36\", \"Accept-Encoding\":\"gzip, deflate\", \"Accept\":\"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"DNT\":\"1\",\"Connection\":\"close\", \"Upgrade-Insecure-Requests\":\"1\"}\n",
+    "\n",
+    "    page = requests.get(URL, headers=headers)\n",
+    "\n",
+    "    soup1 = BeautifulSoup(page.content, \"html.parser\")\n",
+    "\n",
+    "    soup2 = BeautifulSoup(soup1.prettify(), \"html.parser\")\n",
+    "\n",
+    "    title = soup2.find(id='productTitle').get_text()\n",
+    "\n",
+    "    price = soup2.find(id='priceblock_ourprice').get_text()\n",
+    "\n",
+    "    price = price.strip()[1:]\n",
+    "    title = title.strip()\n",
+    "\n",
+    "    import datetime\n",
+    "\n",
+    "    today = datetime.date.today()\n",
+    "    #Combine all of the above code into one function\n",
+    "   \n",
+    "def check_price():\n",
+    "    URL = 'https://www.amazon.com/Funny-Data-Systems-Business-Analyst/dp/B07FNW9FGJ/ref=sr_1_3?dchild=1&keywords=data%2Banalyst%2Btshirt&qid=1626655184&sr=8-3&customId=B0752XJYNL&th=1'\n",
+    "\n",
+    "    headers = {\"User-Agent\": \"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/78.0.3904.108 Safari/537.36\", \"Accept-Encoding\":\"gzip, deflate\", \"Accept\":\"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\", \"DNT\":\"1\",\"Connection\":\"close\", \"Upgrade-Insecure-Requests\":\"1\"}\n",
+    "\n",
+    "    page = requests.get(URL, headers=headers)\n",
+    "\n",
+    "    soup1 = BeautifulSoup(page.content, \"html.parser\")\n",
+    "\n",
+    "    soup2 = BeautifulSoup(soup1.prettify(), \"html.parser\")\n",
+    "\n",
+    "    title = soup2.find(id='productTitle').get_text()\n",
+    "\n",
+    "    price = soup2.find(id='priceblock_ourprice').get_text()\n",
+    "\n",
+    "    price = price.strip()[1:]\n",
+    "    title = title.strip\n",
+    "    import csv \n",
+    "\n",
+    "    header = ['Title', 'Price', 'Date']\n",
+    "    data = [title, price, today]\n",
+    "\n",
+    "    with open('AmazonWebScraperDataset.csv', 'a+', newline='', encoding='UTF8') as f:\n",
+    "        writer = csv.writer(f)\n",
+    "        writer.writerow(data) "
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "id": "35357ee2-b109-4356-8bb1-e320a5cddc95",
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "# Runs check_price after a set time and inputs data into your CSV\n",
+    "\n",
+    "while(True):\n",
+    "    check_price()\n",
+    "    time.sleep(86400)"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "id": "096a5c6d-4525-4398-b336-8ab4476b5f47",
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "import pandas as pd\n",
+    "\n",
+    "df = pd.read_csv(r'C:\\Users\\alexf\\AmazonWebScraperDataset.csv')\n",
+    "\n",
+    "print(df)"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "id": "11bff3da-2e7c-4ed7-858f-047d75342a48",
+   "metadata": {},
+   "outputs": [],
+   "source": []
+  }
+ ],
+ "metadata": {
+  "kernelspec": {
+   "display_name": "Python [conda env:base] *",
+   "language": "python",
+   "name": "conda-base-py"
+  },
+  "language_info": {
+   "codemirror_mode": {
+    "name": "ipython",
+    "version": 3
+   },
+   "file_extension": ".py",
+   "mimetype": "text/x-python",
+   "name": "python",
+   "nbconvert_exporter": "python",
+   "pygments_lexer": "ipython3",
+   "version": "3.12.7"
+  }
+ },
+ "nbformat": 4,
+ "nbformat_minor": 5
+}
